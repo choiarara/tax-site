@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>3.3% 세금 계산기</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f9f9f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .calculator {
+      background: white;
+      padding: 24px 32px;
+      border-radius: 16px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      max-width: 400px;
+      width: 100%;
+    }
+    input, select {
+      padding: 8px;
+      font-size: 16px;
+      width: 100%;
+      margin-bottom: 16px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      background: #4f46e5;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    .results {
+      margin-top: 20px;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    .highlight {
+      font-weight: bold;
+      color: #4f46e5;
+    }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <h2 style="text-align: center;">3.3% 세금 계산기</h2>
+    <label>금액 입력:</label>
+    <input type="number" id="amount" placeholder="예: 1600000" />
+
+    <label>계산 방식 선택:</label>
+    <select id="mode">
+      <option value="include">총액에 세금 포함</option>
+      <option value="exclude">세금 별도 (공급가 기준)</option>
+    </select>
+
+    <button onclick="calculate()">계산하기</button>
+    <div class="results" id="results"></div>
+  </div>
+
+  <script>
+    function calculate() {
+      const amount = parseFloat(document.getElementById('amount').value);
+      const mode = document.getElementById('mode').value;
+
+      if (!amount || amount <= 0) {
+        document.getElementById('results').innerHTML = '금액을 정확히 입력해주세요.';
+        return;
+      }
+
+      let supply = 0;
+      let tax = 0;
+      let total = 0;
+
+      if (mode === 'include') {
+        supply = Math.floor(amount / 1.033);
+        tax = amount - supply;
+        total = amount;
+      } else {
+        supply = amount;
+        tax = Math.floor(amount * 0.033);
+        total = supply + tax;
+      }
+
+      document.getElementById('results').innerHTML = `
+        공급가액: <span class="highlight">${supply.toLocaleString()}원</span><br/>
+        세액 (3.3%): <span class="highlight">${tax.toLocaleString()}원</span><br/>
+        합계: <span class="highlight">${total.toLocaleString()}원</span>
+      `;
+    }
+  </script>
+</body>
+</html>
